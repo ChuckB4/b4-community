@@ -1,0 +1,44 @@
+title: "[Strategy] "
+labels: ["strategy"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Share a strategy for review and improvement. **Strategies here are for simulation only.**
+        Tip: in B4 Studio set Visibility → Public (it requires simulation-only accounts, a stop and daily limits), then **Share → Copy community post**.
+        Community builds are not B4 releases and are not reviewed for profitability or live-trading safety.
+  - type: textarea
+    id: post
+    attributes:
+      label: Your build
+      description: Entry logic, exits, risk limits, the source code (in a ```csharp block) and, if you have one, a B4 Studio share link.
+    validations:
+      required: true
+  - type: textarea
+    id: testing
+    attributes:
+      label: How you tested it
+      description: Instrument, bar type, dates, Strategy Analyzer and/or Playback/simulation, commissions and slippage included or not. No profit claims.
+    validations:
+      required: true
+  - type: dropdown
+    id: license
+    attributes:
+      label: License
+      options:
+        - MIT
+        - Apache-2.0
+        - MPL-2.0
+    validations:
+      required: true
+  - type: checkboxes
+    id: agree
+    attributes:
+      label: Community rules
+      options:
+        - label: The strategy is set to Simulation and Playback accounts only and uses a protective stop and a daily loss limit.
+          required: true
+        - label: I wrote this code or have the right to share it under the license above, and it contains no proprietary B4 code.
+          required: true
+        - label: I make no profit claims, and I understand this is not trading advice.
+          required: true
