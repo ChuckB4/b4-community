@@ -120,7 +120,7 @@ Not four separate tools — **one connected system**, where market depth, order 
 🔮 **B4 Quantum** — our research-grade analytical engine (strategy mining, validation, and risk gating) sitting underneath it all, turning raw market data into structured context.
 
 ## ⚡ Why "integrated" is the whole point
-The DOM shows you depth. The Tape shows you aggression. The Scanner finds the setup. Quantum frames the context. And **B4 CoPilot Pro & ALGO Pro** (also in the works) are being built to act on it with configurable, rule-based logic. Together they aim to give you **one coherent read of the market** — not a handful of disconnected windows fighting for your attention.
+The DOM shows you depth. The Tape shows you aggression. The Scanner finds the setup. Quantum frames the context. And **B4 CoPilot Pro & B4 Algo** (both being improved) are built to act on it with configurable, rule-based logic. Together they aim to give you **one coherent read of the market** — not a handful of disconnected windows fighting for your attention.
 
 👀 Sneak peeks will drop in **#product-updates** and **#signals-status**. Turn on notifications for this server so you don't miss them.
 
@@ -195,15 +195,15 @@ What's coming: deeper integration with the connected B4 platform and continued r
 $copilotAlgoPro = @'
 B4-CS-COPILOT-ALGO-PRO
 
-# 🤖⚙️ In the Works: B4 CoPilot Pro & B4 ALGO Pro — the automation layer
+# 🤖⚙️ Being Improved: B4 CoPilot Pro & B4 Algo — the automation layer
 
-The engine finds and frames the setup — **CoPilot Pro and ALGO Pro are being built to act on it inside the connected B4 system.**
+The engine finds and frames the setup — and **B4 CoPilot Pro and B4 Algo are getting major improvements** to act on it inside the connected B4 system.
 
-🤖 **B4 CoPilot Pro (next phase)**
-Advanced NinjaTrader 8 trade automation and management — designed to work with compatible B4 signals, configurable conditions, and execution rules. The next phase aims to plug directly into the integrated platform so DOM, Tape, Scanner, and Quantum context can inform configurable, rule-based execution and position management.
+🤖 **B4 CoPilot Pro — being improved**
+Our advanced NinjaTrader 8 trade automation and management tool is getting enhanced. The improvements are designed to plug tighter into the integrated platform, so DOM, Tape, Scanner, and Quantum context can inform configurable, rule-based execution and position management.
 
-⚙️ **B4 ALGO Pro (next phase)**
-The next evolution of the B4 Algo analytical framework — evaluating trend conditions, market structure, and potential opportunities, now being developed to share context with the rest of the connected B4 toolkit.
+⚙️ **B4 Algo — being improved**
+The B4 Algo analytical framework — evaluating trend conditions, market structure, and potential opportunities — is being upgraded to share context with the rest of the connected B4 toolkit and work more seamlessly across the system.
 
 ## 🧩 How it fits
 Scanner **finds** → DOM + Tape **confirm** → Quantum **frames** → **CoPilot Pro / ALGO Pro act** on it with configurable, rule-based logic. One connected workflow, from idea to execution.
