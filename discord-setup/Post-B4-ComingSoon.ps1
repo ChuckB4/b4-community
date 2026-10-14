@@ -120,7 +120,7 @@ Not four separate tools — **one connected system**, where market depth, order 
 🔮 **B4 Quantum** — our research-grade analytical engine (strategy mining, validation, and risk gating) sitting underneath it all, turning raw market data into structured context.
 
 ## ⚡ Why "integrated" is the whole point
-The DOM shows you depth. The Tape shows you aggression. The Scanner finds the setup. Quantum frames the context. Together they aim to give you **one coherent read of the market** — not four disconnected windows fighting for your attention.
+The DOM shows you depth. The Tape shows you aggression. The Scanner finds the setup. Quantum frames the context. And **B4 CoPilot Pro & ALGO Pro** (also in the works) are being built to act on it with configurable, rule-based logic. Together they aim to give you **one coherent read of the market** — not a handful of disconnected windows fighting for your attention.
 
 👀 Sneak peeks will drop in **#product-updates** and **#signals-status**. Turn on notifications for this server so you don't miss them.
 
@@ -192,6 +192,27 @@ What's coming: deeper integration with the connected B4 platform and continued r
 ⚠️ No indicator guarantees profitable trades; signals provide context, not certainty. See **#risk-disclosures**.
 '@
 
+$copilotAlgoPro = @'
+B4-CS-COPILOT-ALGO-PRO
+
+# 🤖⚙️ In the Works: B4 CoPilot Pro & B4 ALGO Pro — the automation layer
+
+The engine finds and frames the setup — **CoPilot Pro and ALGO Pro are being built to act on it inside the connected B4 system.**
+
+🤖 **B4 CoPilot Pro (next phase)**
+Advanced NinjaTrader 8 trade automation and management — designed to work with compatible B4 signals, configurable conditions, and execution rules. The next phase aims to plug directly into the integrated platform so DOM, Tape, Scanner, and Quantum context can inform configurable, rule-based execution and position management.
+
+⚙️ **B4 ALGO Pro (next phase)**
+The next evolution of the B4 Algo analytical framework — evaluating trend conditions, market structure, and potential opportunities, now being developed to share context with the rest of the connected B4 toolkit.
+
+## 🧩 How it fits
+Scanner **finds** → DOM + Tape **confirm** → Quantum **frames** → **CoPilot Pro / ALGO Pro act** on it with configurable, rule-based logic. One connected workflow, from idea to execution.
+
+👀 Progress updates in **#product-updates** and **#signals-status**.
+
+⚠️ In active development — no dates, no guarantees. Automation does not remove risk; you remain responsible for every order and setting. Nothing here is a signal, recommendation, or claim of profitability. See **#risk-disclosures**.
+'@
+
 # -------------------- POST --------------------
 
 Write-Host "`n#announcements" -ForegroundColor Cyan
@@ -202,6 +223,7 @@ Write-Host "#product-updates" -ForegroundColor Cyan
 $c = Need "product-updates"
 if ($c) {
     Post-ToChannel $c "B4-CS-DOM-SCANNER-TAPE" $domScannerTape
+    Post-ToChannel $c "B4-CS-COPILOT-ALGO-PRO" $copilotAlgoPro
     Post-ToChannel $c "B4-CS-INDICATORPRO-NEXT" $proTeaser
 }
 
