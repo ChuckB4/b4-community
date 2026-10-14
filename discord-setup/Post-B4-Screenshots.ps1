@@ -26,27 +26,27 @@ $Posts = @(
         Channel = "product-updates"
         File    = "b4-tape-news-sentiment.png"
         Color   = 3447003
-        Title   = "🎞️ B4 Tape — News & Sentiment"
+        Title   = "$([char]::ConvertFromUtf32(0x1F39E))$([char]::ConvertFromUtf32(0xFE0F)) B4 Tape $([char]::ConvertFromUtf32(0x2014)) News & Sentiment"
         Url     = "https://b4signals.com/"
-        Desc    = "**Read the order flow as it happens.** B4 Tape for NinjaTrader 8 brings time & sales, a volume-profile ladder, delta/effort-vs-result, and integrated **news & sentiment** (FinBERT) into one view — with event memory (unfinished auction / poor high) and a structured trade-decision readout.`n`n⚡ Speed, press & spread meters · 🧠 Event memory · 📊 Volume at price · 🗣️ Voice/teach modes`n`n*Enhanced visualization based on a NinjaTrader 8 screen (simulation). Not a live trading result.*`n`n⚠️ Tools provide context, not certainty. No indicator or system guarantees profits. See #risk-disclosures."
+        Desc    = "**Read the order flow as it happens.** B4 Tape for NinjaTrader 8 brings time & sales, a volume-profile ladder, delta/effort-vs-result, and integrated **news & sentiment** (FinBERT) into one view $([char]::ConvertFromUtf32(0x2014)) with event memory (unfinished auction / poor high) and a structured trade-decision readout.`n`n$([char]::ConvertFromUtf32(0x26A1)) Speed, press & spread meters $([char]::ConvertFromUtf32(0xB7)) $([char]::ConvertFromUtf32(0x1F9E0)) Event memory $([char]::ConvertFromUtf32(0xB7)) $([char]::ConvertFromUtf32(0x1F4CA)) Volume at price $([char]::ConvertFromUtf32(0xB7)) $([char]::ConvertFromUtf32(0x1F5E3))$([char]::ConvertFromUtf32(0xFE0F)) Voice/teach modes`n`n*Enhanced visualization based on a NinjaTrader 8 screen (simulation). Not a live trading result.*`n`n$([char]::ConvertFromUtf32(0x26A0))$([char]::ConvertFromUtf32(0xFE0F)) Tools provide context, not certainty. No indicator or system guarantees profits. See #risk-disclosures."
     },
     @{
         Marker  = "B4-SHOT-TAPE-TEACH"
         Channel = "product-updates"
         File    = "b4-tape-teaching.png"
         Color   = 15844367
-        Title   = "🎓 B4 Tape — Teaching Mode"
+        Title   = "$([char]::ConvertFromUtf32(0x1F393)) B4 Tape $([char]::ConvertFromUtf32(0x2014)) Teaching Mode"
         Url     = "https://b4signals.com/"
-        Desc    = "**Learn to read the tape while you watch it.** B4 Tape Teaching walks through structured lessons — who trades and where, volume profile, Point of Control, Value Area (VAH/VAL), reading a footprint row, size tiers & whales, and tape speed/spikes — alongside the live value-edge-at-POC readout.`n`n📚 Staged lesson tracks · 🎯 Value-edge initiative @ POC · ▶️ Play / Pause / Replay`n`n*Enhanced visualization based on a NinjaTrader 8 screen (simulation). Not a live trading result.*`n`n⚠️ Educational context only — not individualized advice or a recommendation. See #rules-and-terms and #risk-disclosures."
+        Desc    = "**Learn to read the tape while you watch it.** B4 Tape Teaching walks through structured lessons $([char]::ConvertFromUtf32(0x2014)) who trades and where, volume profile, Point of Control, Value Area (VAH/VAL), reading a footprint row, size tiers & whales, and tape speed/spikes $([char]::ConvertFromUtf32(0x2014)) alongside the live value-edge-at-POC readout.`n`n$([char]::ConvertFromUtf32(0x1F4DA)) Staged lesson tracks $([char]::ConvertFromUtf32(0xB7)) $([char]::ConvertFromUtf32(0x1F3AF)) Value-edge initiative @ POC $([char]::ConvertFromUtf32(0xB7)) $([char]::ConvertFromUtf32(0x25B6))$([char]::ConvertFromUtf32(0xFE0F)) Play / Pause / Replay`n`n*Enhanced visualization based on a NinjaTrader 8 screen (simulation). Not a live trading result.*`n`n$([char]::ConvertFromUtf32(0x26A0))$([char]::ConvertFromUtf32(0xFE0F)) Educational context only $([char]::ConvertFromUtf32(0x2014)) not individualized advice or a recommendation. See #rules-and-terms and #risk-disclosures."
     },
     @{
         Marker  = "B4-SHOT-DOM-PRO"
         Channel = "product-updates"
         File    = "b4-l2-dom-pro.png"
         Color   = 10181046
-        Title   = "🪜 B4 L2 DOM Pro"
+        Title   = "$([char]::ConvertFromUtf32(0x1FA9C)) B4 L2 DOM Pro"
         Url     = "https://b4signals.com/"
-        Desc    = "**Depth-of-market, reimagined for B4.** The L2 DOM Pro ladder shows bid/ask, pull/stack, volume, and B4 levels (VP POC, VAH, VAL, swing hi/lo, Algo R2, TPO signal) right on the price axis — with full trade management: Move Stop (BE/BE+/Bump), Lock Profit/R, Trail, Stop-to-Level, and a Smart Stop suggestion that only ever tightens risk.`n`n🪜 B4 levels on the ladder · 🛡️ Smart Stop (never adds risk) · 🔒 Lock profit in R · 🎯 Stop-to-Level`n`n*Enhanced visualization based on a NinjaTrader 8 screen (simulation). Not a live trading result.*`n`n⚠️ Order & risk controls are tools; you remain responsible for every order and setting. See #risk-disclosures."
+        Desc    = "**Depth-of-market, reimagined for B4.** The L2 DOM Pro ladder shows bid/ask, pull/stack, volume, and B4 levels (VP POC, VAH, VAL, swing hi/lo, Algo R2, TPO signal) right on the price axis $([char]::ConvertFromUtf32(0x2014)) with full trade management: Move Stop (BE/BE+/Bump), Lock Profit/R, Trail, Stop-to-Level, and a Smart Stop suggestion that only ever tightens risk.`n`n$([char]::ConvertFromUtf32(0x1FA9C)) B4 levels on the ladder $([char]::ConvertFromUtf32(0xB7)) $([char]::ConvertFromUtf32(0x1F6E1))$([char]::ConvertFromUtf32(0xFE0F)) Smart Stop (never adds risk) $([char]::ConvertFromUtf32(0xB7)) $([char]::ConvertFromUtf32(0x1F512)) Lock profit in R $([char]::ConvertFromUtf32(0xB7)) $([char]::ConvertFromUtf32(0x1F3AF)) Stop-to-Level`n`n*Enhanced visualization based on a NinjaTrader 8 screen (simulation). Not a live trading result.*`n`n$([char]::ConvertFromUtf32(0x26A0))$([char]::ConvertFromUtf32(0xFE0F)) Order & risk controls are tools; you remain responsible for every order and setting. See #risk-disclosures."
     }
 )
 
