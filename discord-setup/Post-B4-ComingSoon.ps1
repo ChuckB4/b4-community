@@ -1,11 +1,34 @@
-# B4 Trading HQ - "Coming Soon" Hype Loader
-# Posts teaser/coming-soon announcements for the integrated B4 system:
-#   B4 DOM + B4 Scanner + B4 Tape + B4 Quantum (one connected platform), and the new B4 Indicator Pro.
+# B4 Trading HQ - "Coming Soon" Hype Loader (RICH EMBEDS)
+# Posts beautiful embed teasers for the integrated B4 system:
+#   B4 DOM + Scanner + Tape + Quantum (one connected platform), CoPilot Pro & B4 Algo Pro, next Indicator Pro.
 # Run locally. Never paste your Discord bot token into chat or commit it.
-# Uses Discord API v10. Idempotent via per-post markers. Creates/deletes nothing.
+# Uses Discord API v10. Idempotent via per-post markers (hidden in embed footer). Creates/deletes nothing.
+#
+# ADD YOUR IMAGES: fill in the URLs in the $IMG block below (direct image links ending in
+# .png/.jpg/.webp - right-click an image on your site and choose "Copy image address").
+# Leave a value as "" to skip that image. Everything still works with no images set.
 
 $ErrorActionPreference = "Stop"
 $BaseUrl = "https://discord.com/api/v10"
+
+# ------------------------------------------------------------------
+# IMAGE CONFIG - paste direct image URLs here (optional). Example:
+#   SignalsBanner = "https://www.b4signals.com/images/hero.png"
+# ------------------------------------------------------------------
+$IMG = @{
+    RevealBanner    = ""   # big integrated-system reveal (announcements)
+    DomScannerTape  = ""   # DOM/Scanner/Tape post
+    Quantum         = ""   # B4 Quantum post
+    CopilotAlgo     = ""   # CoPilot Pro / B4 Algo Pro post
+    IndicatorPro    = ""   # next B4 Indicator Pro post
+    Logo            = ""   # small logo shown as thumbnail on every embed (optional)
+}
+
+# Brand colors (decimal)
+$C_PURPLE = 10181046   # quantum / reveal
+$C_BLUE   = 3447003    # dom/scanner/tape
+$C_GOLD   = 15844367   # copilot/algo
+$C_RED    = 15158332   # indicator pro
 
 function Read-Required([string]$Prompt) {
     do { $v = (Read-Host $Prompt).Trim(); if (-not $v) { Write-Host "Required." -ForegroundColor Yellow } } while (-not $v)
@@ -40,32 +63,52 @@ function Invoke-Discord {
     throw "Discord API error ($Method $Path): exceeded retry attempts."
 }
 
-function Post-ToChannel {
-    param([string]$ChannelId, [string]$Marker, [string]$Content)
+# Build and post a rich embed. Idempotent: marker is stored in the embed footer text.
+function Post-Embed {
+    param(
+        [string]$ChannelId,
+        [string]$Marker,
+        [string]$Title,
+        [string]$Url,
+        [string]$Description,
+        [int]$Color,
+        [array]$Fields = @(),
+        [string]$Image = "",
+        [string]$Content = ""   # optional plain text above the embed (e.g. @everyone)
+    )
+    # Skip if an embed with this marker footer already exists.
     $msgs = Invoke-Discord GET "/channels/$ChannelId/messages?limit=50"
     foreach ($m in $msgs) {
-        if ($m.author.id -eq $script:BotId -and $m.content -like "*$Marker*") {
-            Write-Host "  Already posted ($Marker); skipping." -ForegroundColor DarkGray
-            return
+        if ($m.author.id -eq $script:BotId) {
+            foreach ($e in $m.embeds) {
+                if ($e.footer -and $e.footer.text -like "*$Marker*") {
+                    Write-Host "  Already posted ($Marker); skipping." -ForegroundColor DarkGray
+                    return
+                }
+            }
         }
     }
-    $full = $Content
-    $chunks = @()
-    while ($full.Length -gt 1900) {
-        $cut = $full.LastIndexOf("`n", 1900)
-        if ($cut -lt 500) { $cut = 1900 }
-        $chunks += $full.Substring(0, $cut)
-        $full = $full.Substring($cut).TrimStart()
+
+    $embed = @{
+        title       = $Title
+        description = $Description
+        color       = $Color
+        footer      = @{ text = "B4 Trading HQ | $Marker" }
     }
-    if ($full.Length -gt 0) { $chunks += $full }
-    foreach ($chunk in $chunks) {
-        Invoke-Discord POST "/channels/$ChannelId/messages" @{ content = $chunk } | Out-Null
-        Start-Sleep -Milliseconds 400
-    }
-    Write-Host "  Posted ($Marker)." -ForegroundColor Green
+    if ($Url)  { $embed.url = $Url }
+    if ($Fields.Count -gt 0) { $embed.fields = $Fields }
+    if ($Image) { $embed.image = @{ url = $Image } }
+    if ($IMG.Logo) { $embed.thumbnail = @{ url = $IMG.Logo } }
+
+    $payload = @{ embeds = @($embed) }
+    if ($Content) { $payload.content = $Content }
+
+    Invoke-Discord POST "/channels/$ChannelId/messages" $payload | Out-Null
+    Start-Sleep -Milliseconds 500
+    Write-Host "  Posted embed ($Marker)." -ForegroundColor Green
 }
 
-Write-Host "`nB4 Trading HQ - Coming Soon Hype Loader" -ForegroundColor Cyan
+Write-Host "`nB4 Trading HQ - Coming Soon Hype Loader (embeds)" -ForegroundColor Cyan
 Write-Host "The bot token stays on this computer. Do not send it to anyone." -ForegroundColor Yellow
 
 $secure = Read-Host "Enter Discord bot token (hidden)" -AsSecureString
@@ -75,8 +118,8 @@ finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr) }
 if ([string]::IsNullOrWhiteSpace($token)) { throw "Token not supplied." }
 
 $script:Headers = @{
-    Authorization  = "Bot $token"
-    "User-Agent"   = "B4-Trading-HQ-ComingSoon/1.0"
+    Authorization = "Bot $token"
+    "User-Agent"  = "B4-Trading-HQ-ComingSoon/2.0"
 }
 
 $guildId = Read-Required "Enter B4 Trading HQ Server ID"
@@ -97,143 +140,65 @@ function Need([string]$name) {
     return $byName[$name]
 }
 
-Write-Host "`nAbout to post COMING SOON teasers to #announcements, #product-updates, #signals-status." -ForegroundColor Cyan
+Write-Host "`nAbout to post COMING SOON embed teasers to #announcements, #product-updates, #signals-status." -ForegroundColor Cyan
 $go = Read-Required "Type POST to continue"
 if ($go -cne "POST") { throw "Stopped. Nothing was posted." }
 
-# -------------------- CONTENT --------------------
+# ======================= POSTS =======================
 
-$bigReveal = @'
-B4-CS-INTEGRATED-REVEAL
-
-@everyone
-# 🚀 COMING SOON: The Integrated B4 Trading System
-
-This is the one we've been building toward.
-
-Not four separate tools — **one connected system**, where market depth, order flow, scanning, and advanced analytics talk to each other and feed a single, structured decision process.
-
-## 🔗 Four pillars. One platform.
-
-🪜 **B4 DOM** — a next-generation depth-of-market ladder for reading resting liquidity, order placement, and execution context in real time.
-
-📡 **B4 Scanner** — continuously scans your markets for B4 conditions and setups, so opportunities come to you instead of you hunting across charts.
-
-🎞️ **B4 Tape** — real-time tape / time-and-sales order-flow reading: aggression, speed, and who's in control at the point of trade.
-
-🔮 **B4 Quantum** — our research-grade analytical engine (strategy mining, validation, and risk gating) sitting underneath it all, turning raw market data into structured context.
-
-## ⚡ Why "integrated" is the whole point
-The DOM shows you depth. The Tape shows you aggression. The Scanner finds the setup. Quantum frames the context. And **B4 CoPilot Pro & the new B4 Algo Pro** (the upgraded B4 Algo) are built to act on it with configurable, rule-based logic. Together they aim to give you **one coherent read of the market** — not a handful of disconnected windows fighting for your attention.
-
-👀 Sneak peeks will drop in **#product-updates** and **#signals-status**. Turn on notifications for this server so you don't miss them.
-
-⚠️ **Reality check:** these are in active development — no release dates promised, no performance guarantees, and automation never removes risk. Nothing here is a signal, recommendation, or claim of profitability. Please read **#risk-disclosures**.
-
-This is the next generation of B4. Buckle up. 🖤
-
-— Chuck · **B4 Trading Tools**
-'@
-
-$domScannerTape = @'
-B4-CS-DOM-SCANNER-TAPE
-
-# 🪜📡🎞️ Coming Soon: B4 DOM · Scanner · Tape — Built to Work Together
-
-**🪜 B4 DOM — Depth-of-Market, reimagined**
-A fast, readable order-book ladder for following resting liquidity, order placement, and execution context in real time. Designed to pair directly with B4 order-flow context — not to live in isolation.
-
-**📡 B4 Scanner — your setups, found for you**
-A multi-market scanner that watches for B4 conditions across your instruments and surfaces what matters. The goal: stop flipping through charts and let the setups come to you — then confirm them with the rest of the B4 toolkit.
-
-**🎞️ B4 Tape — read the order flow as it happens**
-Real-time tape / time-and-sales reading focused on aggression, pace, and buying vs. selling pressure right at the point of trade — the context behind the candle.
-
-## 🧩 The integration story
-Scanner **finds** → Tape + DOM **confirm the flow and depth** → Quantum **frames the context**. One pipeline, one read of the market.
-
-More detail and previews coming to **#signals-status**.
-
-⚠️ In development. No dates, no guarantees. Not a signal or recommendation. See **#risk-disclosures**.
-'@
-
-$quantum = @'
-B4-CS-QUANTUM
-
-# 🔮 Coming Soon: B4 Quantum — the engine under the hood
-
-B4 Quantum is the research-grade analytical core being built to power the connected B4 system.
-
-Under development behind the scenes:
-🔹 **Strategy mining & concept research** — systematically exploring and screening ideas rather than guessing.
-🔹 **Walk-forward validation** — testing concepts across time to pressure-test robustness before anything is trusted.
-🔹 **Risk gating & execution readiness** — structured checks that evaluate whether conditions are suitable before an idea graduates toward live use.
-🔹 **Market sentiment analysis** — incorporating sentiment signals into the broader context.
-🔹 **NinjaTrader 8 integration path** — designed so validated research can connect to the tools you already use.
-
-The vision: a disciplined pipeline from **idea → validation → risk-gated readiness**, feeding the DOM, Scanner, and Tape with structured context.
-
-👀 Follow progress in **#signals-status**.
-
-⚠️ **Important:** B4 Quantum is research and development. It is not a product you can buy today, not a signal service, and makes no claim of accuracy or profitability. Research results and backtests do not guarantee future outcomes. Review **#risk-disclosures**.
-'@
-
-$proTeaser = @'
-B4-CS-INDICATORPRO-NEXT
-
-# 🛠️⚡ Coming Soon: The Next B4 Indicator Pro
-
-B4 Indicator Pro for NinjaTrader 8 keeps evolving. The next phase is designed to connect tighter with the broader B4 system — so the squeeze intelligence, Trend Cloud confluence, momentum, and signal context you already know can line up with the DOM, Tape, and Scanner.
-
-Already announced and in packaging:
-⚡ Squeeze Intelligence · 🦈 Shark Fin Momentum · ☁️ Trend Cloud Confluence
-🎯 Original IFT vertical-line signal + 1-2-3 setup · 🔄 New Curl signals · 📍 Six customizable reference zones
-
-What's coming: deeper integration with the connected B4 platform and continued refinement.
-
-🌐 https://b4indicators.com/  ·  Watch **#announcements** and **#b4-indicator-pro** for the drop.
-
-⚠️ No indicator guarantees profitable trades; signals provide context, not certainty. See **#risk-disclosures**.
-'@
-
-$copilotAlgoPro = @'
-B4-CS-COPILOT-ALGO-PRO
-
-# 🤖⚙️ Being Improved: B4 CoPilot Pro & B4 Algo → B4 Algo Pro — the automation layer
-
-The engine finds and frames the setup — and the automation layer is getting a major upgrade to act on it inside the connected B4 system.
-
-🤖 **B4 CoPilot Pro — being improved**
-Our advanced NinjaTrader 8 trade automation and management tool is getting enhanced. The improvements are designed to plug tighter into the integrated platform, so DOM, Tape, Scanner, and Quantum context can inform configurable, rule-based execution and position management.
-
-⚙️ **B4 Algo → releasing as B4 Algo Pro**
-The B4 Algo analytical framework — evaluating trend conditions, market structure, and potential opportunities — has been upgraded and will be **released as B4 Algo Pro**: a sharper evolution built to share context with the rest of the connected B4 toolkit and work seamlessly across the system.
-
-## 🧩 How it fits
-Scanner **finds** → DOM + Tape **confirm** → Quantum **frames** → **CoPilot Pro / B4 Algo Pro act** on it with configurable, rule-based logic. One connected workflow, from idea to execution.
-
-👀 Progress updates in **#product-updates** and **#signals-status**.
-
-⚠️ In active development — no dates, no guarantees. Automation does not remove risk; you remain responsible for every order and setting. Nothing here is a signal, recommendation, or claim of profitability. See **#risk-disclosures**.
-'@
-
-# -------------------- POST --------------------
-
-Write-Host "`n#announcements" -ForegroundColor Cyan
+# --- 1) Big integrated reveal (#announcements) ---
 $c = Need "announcements"
-if ($c) { Post-ToChannel $c "B4-CS-INTEGRATED-REVEAL" $bigReveal }
-
-Write-Host "#product-updates" -ForegroundColor Cyan
-$c = Need "product-updates"
 if ($c) {
-    Post-ToChannel $c "B4-CS-DOM-SCANNER-TAPE" $domScannerTape
-    Post-ToChannel $c "B4-CS-COPILOT-ALGO-PRO" $copilotAlgoPro
-    Post-ToChannel $c "B4-CS-INDICATORPRO-NEXT" $proTeaser
+    Write-Host "`n#announcements" -ForegroundColor Cyan
+    $fields = @(
+        @{ name = "🪜 B4 DOM";     value = "Next-gen depth-of-market ladder for reading resting liquidity, order placement, and execution context in real time."; inline = $true },
+        @{ name = "📡 B4 Scanner"; value = "Continuously scans your markets for B4 conditions so opportunities come to you."; inline = $true },
+        @{ name = "🎞️ B4 Tape";    value = "Real-time tape / time-and-sales order-flow reading: aggression, pace, and who's in control."; inline = $true },
+        @{ name = "🔮 B4 Quantum"; value = "Research-grade analytical engine (strategy mining, validation, risk gating) turning raw data into structured context."; inline = $true },
+        @{ name = "🤖 Automation"; value = "**B4 CoPilot Pro** (improved) and the new **B4 Algo Pro** act on it with configurable, rule-based logic."; inline = $true },
+        @{ name = "⚠️ Reality check"; value = "In active development. No release dates, no performance guarantees. Automation never removes risk. Nothing here is a signal or recommendation. See #risk-disclosures."; inline = $false }
+    )
+    $desc = "This is the one we've been building toward.`n`nNot separate tools — **one connected system**, where market depth, order flow, scanning, and advanced analytics talk to each other and feed a single, structured decision process.`n`n👀 Sneak peeks will drop in **#product-updates** and **#signals-status**. Turn on notifications so you don't miss them.`n`nThis is the next generation of B4. Buckle up. 🖤 — Chuck"
+    Post-Embed -ChannelId $c -Marker "B4-CS-INTEGRATED-REVEAL" -Title "🚀 COMING SOON: The Integrated B4 Trading System" -Url "https://b4signals.com/" -Description $desc -Color $C_PURPLE -Fields $fields -Image $IMG.RevealBanner -Content "@everyone"
 }
 
-Write-Host "#signals-status" -ForegroundColor Cyan
-$c = Need "signals-status"
-if ($c) { Post-ToChannel $c "B4-CS-QUANTUM" $quantum }
+# --- 2) DOM / Scanner / Tape (#product-updates) ---
+$c = Need "product-updates"
+if ($c) {
+    Write-Host "#product-updates" -ForegroundColor Cyan
+    $fields = @(
+        @{ name = "🪜 B4 DOM — Depth-of-Market, reimagined"; value = "A fast, readable order-book ladder for following resting liquidity, order placement, and execution context in real time. Built to pair with B4 order-flow context."; inline = $false },
+        @{ name = "📡 B4 Scanner — your setups, found for you"; value = "Watches for B4 conditions across your instruments and surfaces what matters. Stop flipping charts — let the setups come to you, then confirm with the B4 toolkit."; inline = $false },
+        @{ name = "🎞️ B4 Tape — read the flow as it happens"; value = "Real-time tape / time-and-sales focused on aggression, pace, and buying vs. selling pressure right at the point of trade."; inline = $false },
+        @{ name = "🧩 The integration story"; value = "Scanner **finds** → Tape + DOM **confirm** → Quantum **frames** the context. One pipeline, one read of the market."; inline = $false }
+    )
+    Post-Embed -ChannelId $c -Marker "B4-CS-DOM-SCANNER-TAPE" -Title "🪜📡🎞️ Coming Soon: B4 DOM · Scanner · Tape — Built to Work Together" -Url "https://b4signals.com/" -Description "The connected building blocks of the B4 system — designed to work together, not in isolation.`n`n⚠️ In development. No dates, no guarantees. See #risk-disclosures." -Color $C_BLUE -Fields $fields -Image $IMG.DomScannerTape
 
-Write-Host "`nComing-soon teasers complete." -ForegroundColor Cyan
-Write-Host "Tip: Pin the big reveal in #announcements and publish it if the channel is an announcement channel." -ForegroundColor Yellow
+    Write-Host "#product-updates (automation)" -ForegroundColor Cyan
+    $fields = @(
+        @{ name = "🤖 B4 CoPilot Pro — being improved"; value = "Advanced NinjaTrader 8 trade automation & management, enhanced to plug tighter into the integrated platform so DOM, Tape, Scanner, and Quantum context can inform configurable, rule-based execution and position management."; inline = $false },
+        @{ name = "⚙️ B4 Algo → releasing as B4 Algo Pro"; value = "The B4 Algo framework (trend conditions, market structure, opportunities) upgraded and relaunching as **B4 Algo Pro**, built to share context across the connected B4 toolkit."; inline = $false },
+        @{ name = "🧩 How it fits"; value = "Scanner **finds** → DOM + Tape **confirm** → Quantum **frames** → **CoPilot Pro / B4 Algo Pro act** with configurable, rule-based logic."; inline = $false }
+    )
+    Post-Embed -ChannelId $c -Marker "B4-CS-COPILOT-ALGO-PRO" -Title "🤖⚙️ The Automation Layer: B4 CoPilot Pro & B4 Algo Pro" -Url "https://b4signals.com/" -Description "The engine finds and frames the setup — the automation layer is getting a major upgrade to act on it inside the connected B4 system.`n`n⚠️ In active development. Automation does not remove risk; you remain responsible for every order and setting. Not a signal or recommendation. See #risk-disclosures." -Color $C_GOLD -Fields $fields -Image $IMG.CopilotAlgo
+
+    Write-Host "#product-updates (indicator pro)" -ForegroundColor Cyan
+    Post-Embed -ChannelId $c -Marker "B4-CS-INDICATORPRO-NEXT" -Title "🛠️⚡ Coming Soon: The Next B4 Indicator Pro" -Url "https://b4indicators.com/" -Description "B4 Indicator Pro for NinjaTrader 8 keeps evolving — the next phase connects tighter with the broader B4 system so squeeze intelligence, Trend Cloud confluence, momentum, and signal context line up with the DOM, Tape, and Scanner.`n`n⚡ Squeeze Intelligence · 🦈 Shark Fin Momentum · ☁️ Trend Cloud Confluence`n🎯 IFT vertical-line + 1-2-3 setup · 🔄 Curl signals · 📍 Six customizable reference zones`n`n🌐 https://b4indicators.com/ · Watch **#b4-indicator-pro** for the drop.`n`n⚠️ No indicator guarantees profitable trades; signals provide context, not certainty. See #risk-disclosures." -Color $C_RED -Image $IMG.IndicatorPro
+}
+
+# --- 3) Quantum (#signals-status) ---
+$c = Need "signals-status"
+if ($c) {
+    Write-Host "#signals-status" -ForegroundColor Cyan
+    $fields = @(
+        @{ name = "🔹 Strategy mining & concept research"; value = "Systematically exploring and screening ideas rather than guessing."; inline = $false },
+        @{ name = "🔹 Walk-forward validation"; value = "Testing concepts across time to pressure-test robustness before anything is trusted."; inline = $false },
+        @{ name = "🔹 Risk gating & execution readiness"; value = "Structured checks on whether conditions are suitable before an idea graduates toward live use."; inline = $false },
+        @{ name = "🔹 Market sentiment analysis"; value = "Incorporating sentiment signals into the broader context."; inline = $false },
+        @{ name = "🔹 NinjaTrader 8 integration path"; value = "Designed so validated research can connect to the tools you already use."; inline = $false }
+    )
+    Post-Embed -ChannelId $c -Marker "B4-CS-QUANTUM" -Title "🔮 Coming Soon: B4 Quantum — the engine under the hood" -Url "https://b4signals.com/" -Description "B4 Quantum is the research-grade analytical core being built to power the connected B4 system. The vision: a disciplined pipeline from **idea → validation → risk-gated readiness**, feeding the DOM, Scanner, and Tape with structured context.`n`n⚠️ **Important:** B4 Quantum is research & development — not a product you can buy today, not a signal service, and makes no claim of accuracy or profitability. Research results and backtests do not guarantee future outcomes. See #risk-disclosures." -Color $C_PURPLE -Fields $fields -Image $IMG.Quantum
+}
+
+Write-Host "`nComing-soon embeds complete." -ForegroundColor Cyan
+Write-Host "Add image URLs in the \$IMG block at the top of this script to show pictures, then re-run after deleting old posts if you want them replaced." -ForegroundColor Yellow
