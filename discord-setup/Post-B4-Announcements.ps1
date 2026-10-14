@@ -172,7 +172,7 @@ The B4 ecosystem is being built around a systematic approach to market analysis,
 
 🔹 **B4 Footprint Pro** — order-flow analysis for bid/ask volume, delta, imbalances, and buying/selling pressure at individual price levels.
 
-🔹 **B4 Algo** — a proprietary analytical framework for evaluating trend conditions, market structure, and potential opportunities.
+🔹 **B4 Algo** — a proprietary analytical framework for evaluating trend conditions, market structure, and potential opportunities. *(Being upgraded — releasing soon as B4 Algo Pro.)*
 
 🔹 **B4 Squeeze, B4 KISS, B4 Shoyu, B4 Volume Profile, and more** — resources to help evaluate momentum, consolidation, trend context, volume, and changing conditions.
 
