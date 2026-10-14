@@ -15,7 +15,12 @@ function Read-Required([string]$Prompt) {
 function Invoke-Discord {
     param([string]$Method, [string]$Path, $Body = $null)
     $p = @{ Method = $Method; Uri = "$BaseUrl$Path"; Headers = $script:Headers }
-    if ($null -ne $Body) { $p.Body = ($Body | ConvertTo-Json -Depth 20 -Compress) }
+    if ($null -ne $Body) {
+        # Encode as UTF-8 bytes so emoji/non-ASCII survive on Windows PowerShell 5.1.
+        $json = ($Body | ConvertTo-Json -Depth 20 -Compress)
+        $p.Body = [System.Text.Encoding]::UTF8.GetBytes($json)
+        $p.ContentType = "application/json; charset=utf-8"
+    }
     for ($attempt = 1; $attempt -le 5; $attempt++) {
         try { return Invoke-RestMethod @p }
         catch {
@@ -71,7 +76,6 @@ if ([string]::IsNullOrWhiteSpace($token)) { throw "Token not supplied." }
 
 $script:Headers = @{
     Authorization  = "Bot $token"
-    "Content-Type" = "application/json"
     "User-Agent"   = "B4-Trading-HQ-ComingSoon/1.0"
 }
 
